@@ -2,6 +2,7 @@ import ast
 import re
 from typing import Iterable
 
+import numpy as np
 import pandas as pd
 
 
@@ -45,7 +46,10 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def ensure_required_columns(df: pd.DataFrame, required_columns: Iterable[str] = REQUIRED_COLUMNS) -> None:
+def ensure_required_columns(
+    df: pd.DataFrame,
+    required_columns: Iterable[str] = REQUIRED_COLUMNS,
+) -> None:
     missing_columns = [column for column in required_columns if column not in df.columns]
     if missing_columns:
         raise ValueError(f"Missing required columns: {', '.join(missing_columns)}")
@@ -88,7 +92,9 @@ def clean_price(value) -> float | None:
         return None
 
     if isinstance(value, (int, float)):
-        return float(value)
+        if np.isfinite(value):
+            return float(value)
+        return None
 
     value = str(value).strip().lower()
     if value in {"free", "free to play", "gratuito", ""}:
@@ -100,9 +106,19 @@ def clean_price(value) -> float | None:
 
     value = value.replace(",", ".")
     try:
-        return float(value)
+        price = float(value)
+        if np.isfinite(price):
+            return price
+        return None
     except ValueError:
         return None
+
+
+def clean_integer_series(series: pd.Series) -> pd.Series:
+    numeric_series = pd.to_numeric(series, errors="coerce")
+    numeric_series = numeric_series.where(np.isfinite(numeric_series))
+    numeric_series = numeric_series.round()
+    return numeric_series.astype("Int64")
 
 
 def calculate_review_percentage(df: pd.DataFrame) -> pd.Series:
@@ -123,7 +139,10 @@ def clean_games(df: pd.DataFrame) -> pd.DataFrame:
     ensure_required_columns(df)
 
     df = df.drop_duplicates(subset=["app_id"]).copy()
-    df["app_id"] = pd.to_numeric(df["app_id"], errors="coerce").astype("Int64")
+
+    df["app_id"] = clean_integer_series(df["app_id"])
+    df = df.dropna(subset=["app_id"])
+
     df["name"] = df["name"].astype(str).str.strip()
 
     if "developer" in df.columns:
@@ -145,12 +164,14 @@ def clean_games(df: pd.DataFrame) -> pd.DataFrame:
 
     for column in ["positive_reviews", "negative_reviews", "total_reviews"]:
         if column in df.columns:
-            df[column] = pd.to_numeric(df[column], errors="coerce").astype("Int64")
+            df[column] = clean_integer_series(df[column])
         else:
             df[column] = pd.Series([None] * len(df), dtype="Int64")
 
-    if df["total_reviews"].isna().all() and {"positive_reviews", "negative_reviews"}.issubset(df.columns):
-        df["total_reviews"] = df["positive_reviews"].fillna(0) + df["negative_reviews"].fillna(0)
+    if df["total_reviews"].isna().all():
+        df["total_reviews"] = (
+            df["positive_reviews"].fillna(0) + df["negative_reviews"].fillna(0)
+        ).astype("Int64")
 
     df["positive_review_percentage"] = calculate_review_percentage(df).round(2)
 
