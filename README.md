@@ -114,6 +114,8 @@ pytest
 - `data/processed/powerbi_genre_ratings.csv`
 - `data/processed/powerbi_price_ranges.csv`
 - `data/processed/powerbi_releases_by_year.csv`
+- `data/processed/powerbi_top_developers.csv`
+- `data/processed/powerbi_developer_ratings.csv`
 - `reports/figures/genre_ratings.png`
 - `reports/figures/price_ranges.png`
 - `reports/figures/releases_by_year.png`
