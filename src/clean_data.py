@@ -52,11 +52,14 @@ def ensure_required_columns(df: pd.DataFrame, required_columns: Iterable[str] = 
 
 
 def parse_list_like(value) -> list[str]:
-    if value is None or pd.isna(value):
+    if value is None:
         return []
 
     if isinstance(value, list):
         return [str(item).strip() for item in value if str(item).strip()]
+
+    if pd.isna(value):
+        return []
 
     value = str(value).strip()
     if not value:
