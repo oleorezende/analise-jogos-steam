@@ -8,6 +8,8 @@ Investigar como genero, preco, avaliacoes, desenvolvedoras e ano de lancamento s
 
 A ideia e construir um projeto de portfolio completo, com etapas claras de extracao manual da base, tratamento de dados, modelagem SQL, exportacao de tabelas analiticas e dashboard final em Power BI.
 
+Tambem existe um dashboard complementar em Streamlit, criado para aprendizado e exploracao rapida dos dados com Python. O foco principal do projeto continua sendo Power BI.
+
 ## Perguntas de negocio
 
 - Quais generos possuem as melhores avaliacoes?
@@ -37,7 +39,8 @@ O arquivo bruto nao deve ser commitado no GitHub. Ele e ignorado pelo `.gitignor
 
 - Python para limpeza, padronizacao e exportacao dos dados.
 - SQL/SQLite para modelagem e consultas analiticas.
-- Power BI para visualizacao e storytelling dos resultados.
+- Streamlit para dashboard complementar de aprendizado.
+- Power BI para visualizacao e storytelling dos resultados finais.
 
 ## Estrutura
 
@@ -53,6 +56,7 @@ O arquivo bruto nao deve ser commitado no GitHub. Ele e ignorado pelo `.gitignor
 |-- reports/figures/   # graficos gerados em Python
 |-- sql/               # schema e consultas SQL
 |-- src/               # pipeline Python
+|-- streamlit_app/     # dashboard complementar em Streamlit
 |-- tests/             # testes unitarios
 |-- README.md
 `-- requirements.txt
@@ -70,7 +74,7 @@ python -m venv .venv
 Instale as dependencias principais:
 
 ```bash
-pip install pandas numpy matplotlib seaborn sqlalchemy pytest
+pip install -r requirements.txt
 ```
 
 Com o CSV bruto salvo em `data/raw/steam_games.csv`, execute o pipeline completo:
@@ -87,6 +91,16 @@ python -m src.build_database
 python -m src.export_powerbi_tables
 python -m src.create_visualizations
 ```
+
+## Dashboard Streamlit
+
+Para abrir o dashboard complementar em Streamlit:
+
+```bash
+streamlit run streamlit_app/app.py
+```
+
+Esse app usa os arquivos tratados em `data/processed/` e serve para exploracao interativa durante o aprendizado.
 
 ## Saidas geradas
 
@@ -126,6 +140,7 @@ Na execucao com a base FronkonGames, o pipeline gerou:
 - `docs/data_dictionary.md`: dicionario das tabelas tratadas.
 - `docs/powerbi_dashboard_plan.md`: roteiro pratico do dashboard.
 - `docs/data_sources.md`: fontes candidatas e justificativa.
+- `streamlit_app/README.md`: como rodar o dashboard complementar.
 
 ## Status
 
@@ -138,6 +153,7 @@ Concluido:
 - banco SQLite;
 - consultas SQL;
 - tabelas agregadas para Power BI;
+- dashboard complementar em Streamlit;
 - documentacao tecnica inicial.
 
 Pendente:
