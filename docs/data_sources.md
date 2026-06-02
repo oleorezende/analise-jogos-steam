@@ -30,19 +30,23 @@ Ponto de atencao:
 
 - pode limitar analises historicas se o foco for somente 2021-2025.
 
-### Kaggle - Steam Games Dataset
+### Kaggle - Steam Games Dataset / FronkonGames
 
-Link: https://www.kaggle.com/datasets/fronkongames/steam-games-dataset
+Links:
+
+- Kaggle: https://www.kaggle.com/datasets/fronkongames/steam-games-dataset
+- Hugging Face: https://huggingface.co/datasets/FronkonGames/steam-games-dataset
 
 Pontos fortes:
 
 - base ampla de jogos da Steam;
-- possui preco, data de lancamento, desenvolvedoras e generos;
-- boa candidata para analises gerais de catalogo.
+- possui campos como `appID`, `name`, `release_date`, `price`, `positive`, `negative`, `developers` e `genres`;
+- boa candidata para analises gerais de catalogo;
+- o formato dos campos principais ja esta contemplado pelo pipeline inicial.
 
 Ponto de atencao:
 
-- validar se os campos de avaliacao estao completos para as perguntas do projeto.
+- validar tamanho do arquivo e formato final antes de rodar o pipeline completo.
 
 ### Mendeley Data - Steam Games Metadata and Player Reviews (2020-2024)
 
@@ -60,4 +64,4 @@ Ponto de atencao:
 
 ## Recomendacao inicial
 
-Comecar com uma base Kaggle ampla para construir o pipeline e o dashboard principal. Depois, se fizer sentido, usar uma fonte com reviews mais detalhadas para enriquecer a analise.
+Comecar com a base ampla da FronkonGames para construir o pipeline e o dashboard principal. Depois, se fizer sentido, usar uma fonte com reviews mais detalhadas para enriquecer a analise.
