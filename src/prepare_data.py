@@ -8,6 +8,20 @@ from src.config import (
 )
 
 
+def read_steam_games_csv(file_path):
+    with open(file_path, encoding="utf-8") as file:
+        header = file.readline().strip().split(",")
+
+    fixed_columns = []
+    for column in header:
+        if column == "DiscountDLC count":
+            fixed_columns.extend(["Discount", "DLC count"])
+        else:
+            fixed_columns.append(column)
+
+    return pd.read_csv(file_path, header=0, names=fixed_columns)
+
+
 def main() -> None:
     if not RAW_STEAM_GAMES_FILE.exists():
         raise FileNotFoundError(
@@ -15,7 +29,7 @@ def main() -> None:
             "Place the Steam dataset CSV at data/raw/steam_games.csv."
         )
 
-    raw_df = pd.read_csv(RAW_STEAM_GAMES_FILE)
+    raw_df = read_steam_games_csv(RAW_STEAM_GAMES_FILE)
     games_df = clean_games(raw_df)
     genres_df = split_genres(games_df)
 
