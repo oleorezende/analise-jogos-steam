@@ -22,7 +22,7 @@ A ideia e construir um projeto de portfolio completo, com etapas claras de trata
 - SQL para modelagem e consultas analiticas.
 - Power BI para visualizacao e storytelling dos resultados.
 
-## Estrutura planejada
+## Estrutura
 
 ```text
 .
@@ -38,6 +38,70 @@ A ideia e construir um projeto de portfolio completo, com etapas claras de trata
 `-- requirements.txt
 ```
 
+## Fonte de dados
+
+A fonte principal ainda sera definida. As candidatas estao documentadas em `docs/data_sources.md`.
+
+Para executar o pipeline atual, coloque o arquivo CSV da base escolhida em:
+
+```text
+data/raw/steam_games.csv
+```
+
+Colunas esperadas pelo pipeline:
+
+- `appid` ou `app_id`;
+- `name`, `title` ou `game`;
+- `release_date`;
+- `developer` ou `developers`;
+- `price`;
+- `positive` e `negative`, quando disponiveis;
+- `genres` ou `genre`.
+
+## Como executar
+
+Crie e ative um ambiente virtual:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+Instale as dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+Prepare os dados tratados:
+
+```bash
+python -m src.prepare_data
+```
+
+Crie o banco SQLite:
+
+```bash
+python -m src.build_database
+```
+
+Exporte tabelas agregadas para o Power BI:
+
+```bash
+python -m src.export_powerbi_tables
+```
+
+## Saidas geradas
+
+- `data/processed/steam_games_clean.csv`
+- `data/processed/steam_game_genres.csv`
+- `data/processed/steam_games.sqlite`
+- `data/processed/powerbi_genre_ratings.csv`
+- `data/processed/powerbi_price_ranges.csv`
+- `data/processed/powerbi_releases_by_year.csv`
+
 ## Status
 
-Projeto iniciado. A proxima etapa sera definir a fonte de dados, preparar o ambiente Python e criar o primeiro pipeline de carregamento.
+Projeto iniciado com estrutura, documentacao, pipeline inicial em Python, modelo SQL e consultas analiticas base.
+
+Proxima etapa: escolher a fonte definitiva, baixar a base e validar o pipeline com dados reais.
