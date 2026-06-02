@@ -1,41 +1,99 @@
 # Como Baixar a Base de Dados
 
-## Opcao recomendada: FronkonGames Steam Games Dataset
+## Fonte recomendada
 
-A base recomendada para iniciar o projeto e a Steam Games Dataset, criada por FronkonGames.
+A base recomendada para este projeto e a Steam Games Dataset, criada por FronkonGames.
 
 Links:
 
 - Kaggle: https://www.kaggle.com/datasets/fronkongames/steam-games-dataset
 - Hugging Face: https://huggingface.co/datasets/FronkonGames/steam-games-dataset
 
-Essa base e uma boa candidata porque possui campos como:
+A base foi escolhida porque contem os campos necessarios para o projeto:
 
-- `appID`;
-- `name`;
-- `release_date`;
-- `price`;
-- `positive`;
-- `negative`;
-- `developers`;
-- `genres`.
+- `AppID`;
+- `Name`;
+- `Release date`;
+- `Price`;
+- `Positive`;
+- `Negative`;
+- `Developers`;
+- `Genres`.
 
 ## Passo a passo
 
 1. Baixe a base pelo Kaggle ou Hugging Face.
-2. Localize o arquivo tabular principal em formato CSV.
-3. Renomeie o arquivo para `steam_games.csv`.
+2. Localize o arquivo CSV principal da base.
+3. Renomeie o arquivo para:
+
+```text
+steam_games.csv
+```
+
 4. Coloque o arquivo em:
 
 ```text
 data/raw/steam_games.csv
 ```
 
-5. Execute:
+5. Execute o pipeline:
 
 ```bash
 python -m src.run_pipeline
 ```
+
+## Resultado esperado
+
+Depois da execucao, os arquivos tratados serao criados em:
+
+```text
+data/processed/
+```
+
+Arquivos principais:
+
+- `steam_games_clean.csv`;
+- `steam_game_genres.csv`;
+- `powerbi_genre_ratings.csv`;
+- `powerbi_price_ranges.csv`;
+- `powerbi_releases_by_year.csv`;
+- `powerbi_top_developers.csv`;
+- `powerbi_developer_ratings.csv`.
+
+## Observacao sobre o cabecalho da base
+
+Na versao usada durante o projeto, o cabecalho do CSV possui uma coluna chamada:
+
+```text
+DiscountDLC count
+```
+
+Na pratica, essa informacao precisa ser lida como duas colunas:
+
+```text
+Discount
+DLC count
+```
+
+O arquivo `src/prepare_data.py` ja corrige isso automaticamente. Essa correcao e importante porque, sem ela, as colunas ficam deslocadas e os dados tratados ficam errados.
+
+## O que subir no GitHub
+
+Pode subir:
+
+```text
+data/processed/steam_games_clean.csv
+data/processed/steam_game_genres.csv
+data/processed/powerbi_*.csv
+```
+
+Nao subir:
+
+```text
+data/raw/steam_games.csv
+```
+
+Motivo: o arquivo bruto e grande, pertence a fonte original e pode ser baixado novamente pelos links acima.
 
 ## Teste rapido com a amostra
 
@@ -50,9 +108,3 @@ Depois execute:
 ```bash
 python -m src.run_pipeline
 ```
-
-## Observacoes
-
-- O arquivo completo da base nao deve ser commitado se for muito grande.
-- Os CSVs tratados e o banco SQLite gerados em `data/processed/` podem ser recriados pelo pipeline.
-- Se a fonte escolhida tiver nomes de colunas diferentes, ajuste os aliases em `src/clean_data.py`.
