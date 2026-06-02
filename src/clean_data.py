@@ -1,3 +1,4 @@
+import ast
 import re
 from typing import Iterable
 
@@ -6,21 +7,22 @@ import pandas as pd
 
 COLUMN_ALIASES = {
     "appid": "app_id",
-    "appID": "app_id",
     "app_id": "app_id",
     "name": "name",
     "title": "name",
     "game": "name",
     "release_date": "release_date",
-    "releaseDate": "release_date",
+    "releasedate": "release_date",
     "developer": "developer",
     "developers": "developer",
     "price": "price_usd",
     "price_usd": "price_usd",
     "positive": "positive_reviews",
     "positive_reviews": "positive_reviews",
+    "positive_ratings": "positive_reviews",
     "negative": "negative_reviews",
     "negative_reviews": "negative_reviews",
+    "negative_ratings": "negative_reviews",
     "reviews": "total_reviews",
     "total_reviews": "total_reviews",
     "genres": "genres",
@@ -47,6 +49,35 @@ def ensure_required_columns(df: pd.DataFrame, required_columns: Iterable[str] = 
     missing_columns = [column for column in required_columns if column not in df.columns]
     if missing_columns:
         raise ValueError(f"Missing required columns: {', '.join(missing_columns)}")
+
+
+def parse_list_like(value) -> list[str]:
+    if value is None or pd.isna(value):
+        return []
+
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+
+    value = str(value).strip()
+    if not value:
+        return []
+
+    if value.startswith("[") and value.endswith("]"):
+        try:
+            parsed_value = ast.literal_eval(value)
+            if isinstance(parsed_value, list):
+                return [str(item).strip() for item in parsed_value if str(item).strip()]
+        except (ValueError, SyntaxError):
+            pass
+
+    return [item.strip() for item in re.split(r"[,;|]", value) if item.strip()]
+
+
+def clean_developer(value) -> str:
+    developers = parse_list_like(value)
+    if developers:
+        return developers[0]
+    return "Unknown"
 
 
 def clean_price(value) -> float | None:
@@ -93,7 +124,7 @@ def clean_games(df: pd.DataFrame) -> pd.DataFrame:
     df["name"] = df["name"].astype(str).str.strip()
 
     if "developer" in df.columns:
-        df["developer"] = df["developer"].fillna("Unknown").astype(str).str.strip()
+        df["developer"] = df["developer"].apply(clean_developer)
     else:
         df["developer"] = "Unknown"
 
@@ -145,13 +176,10 @@ def split_genres(df: pd.DataFrame) -> pd.DataFrame:
     genre_rows = []
 
     for row in df[["app_id", "genres"]].itertuples(index=False):
-        if pd.isna(row.genres):
-            continue
+        for genre in parse_list_like(row.genres):
+            genre_rows.append({"app_id": int(row.app_id), "genre": genre})
 
-        genres = re.split(r"[,;|]", str(row.genres))
-        for genre in genres:
-            genre = genre.strip()
-            if genre:
-                genre_rows.append({"app_id": int(row.app_id), "genre": genre})
+    if not genre_rows:
+        return pd.DataFrame(columns=["app_id", "genre"])
 
     return pd.DataFrame(genre_rows).drop_duplicates()
