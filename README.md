@@ -73,21 +73,17 @@ Instale as dependencias:
 pip install -r requirements.txt
 ```
 
-Prepare os dados tratados:
+Execute o pipeline completo:
+
+```bash
+python -m src.run_pipeline
+```
+
+Ou execute cada etapa separadamente:
 
 ```bash
 python -m src.prepare_data
-```
-
-Crie o banco SQLite:
-
-```bash
 python -m src.build_database
-```
-
-Exporte tabelas agregadas para o Power BI:
-
-```bash
 python -m src.export_powerbi_tables
 ```
 
