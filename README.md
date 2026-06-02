@@ -6,7 +6,7 @@ Projeto de analise de dados sobre jogos da Steam, usando Python, SQL e Power BI.
 
 Investigar como genero, preco, avaliacoes, desenvolvedoras e ano de lancamento se relacionam no catalogo da Steam.
 
-A ideia e construir um projeto de portfolio completo, com etapas claras de tratamento de dados, analise exploratoria, consultas SQL e dashboard final em Power BI.
+A ideia e construir um projeto de portfolio completo, com etapas claras de extracao manual da base, tratamento de dados, modelagem SQL, exportacao de tabelas analiticas e dashboard final em Power BI.
 
 ## Perguntas de negocio
 
@@ -16,10 +16,27 @@ A ideia e construir um projeto de portfolio completo, com etapas claras de trata
 - Quais desenvolvedoras aparecem com maior frequencia ou melhor desempenho?
 - Jogos gratuitos possuem avaliacoes diferentes dos jogos pagos?
 
+## Fonte de dados
+
+A base usada no projeto e a Steam Games Dataset, criada por FronkonGames.
+
+Links:
+
+- Kaggle: https://www.kaggle.com/datasets/fronkongames/steam-games-dataset
+- Hugging Face: https://huggingface.co/datasets/FronkonGames/steam-games-dataset
+
+O arquivo bruto deve ser baixado manualmente e salvo em:
+
+```text
+data/raw/steam_games.csv
+```
+
+O arquivo bruto nao deve ser commitado no GitHub. Ele e ignorado pelo `.gitignore` porque pode ser pesado e pertence a fonte original.
+
 ## Ferramentas
 
-- Python para limpeza, tratamento e analise exploratoria.
-- SQL para modelagem e consultas analiticas.
+- Python para limpeza, padronizacao e exportacao dos dados.
+- SQL/SQLite para modelagem e consultas analiticas.
 - Power BI para visualizacao e storytelling dos resultados.
 
 ## Estrutura
@@ -27,48 +44,19 @@ A ideia e construir um projeto de portfolio completo, com etapas claras de trata
 ```text
 .
 |-- data/
-|   |-- raw/
-|   |-- sample/
-|   `-- processed/
-|-- docs/
-|-- notebooks/
-|-- powerbi/
-|-- reports/
-|   `-- figures/
-|-- sql/
-|-- src/
-|-- tests/
+|   |-- raw/           # base bruta local, nao versionada
+|   |-- sample/        # amostra pequena para testes
+|   `-- processed/     # dados tratados e tabelas para Power BI
+|-- docs/              # documentacao do projeto
+|-- notebooks/         # analises exploratorias opcionais
+|-- powerbi/           # arquivo .pbix e anotacoes do dashboard
+|-- reports/figures/   # graficos gerados em Python
+|-- sql/               # schema e consultas SQL
+|-- src/               # pipeline Python
+|-- tests/             # testes unitarios
 |-- README.md
 `-- requirements.txt
 ```
-
-## Fonte de dados
-
-A fonte principal ainda sera definida. As candidatas estao documentadas em `docs/data_sources.md`.
-
-Para executar o pipeline atual, coloque o arquivo CSV da base escolhida em:
-
-```text
-data/raw/steam_games.csv
-```
-
-Tambem existe uma amostra pequena em:
-
-```text
-data/sample/steam_games_sample.csv
-```
-
-Essa amostra serve apenas para testar o pipeline antes de baixar a base completa.
-
-Colunas esperadas pelo pipeline:
-
-- `appid`, `appID` ou `app_id`;
-- `name`, `title` ou `game`;
-- `release_date`;
-- `developer` ou `developers`;
-- `price`;
-- `positive` e `negative`, quando disponiveis;
-- `genres` ou `genre`.
 
 ## Como executar
 
@@ -79,13 +67,13 @@ python -m venv .venv
 .venv\Scripts\activate
 ```
 
-Instale as dependencias:
+Instale as dependencias principais:
 
 ```bash
-pip install -r requirements.txt
+pip install pandas numpy matplotlib seaborn sqlalchemy pytest
 ```
 
-Execute o pipeline completo:
+Com o CSV bruto salvo em `data/raw/steam_games.csv`, execute o pipeline completo:
 
 ```bash
 python -m src.run_pipeline
@@ -100,28 +88,60 @@ python -m src.export_powerbi_tables
 python -m src.create_visualizations
 ```
 
-Execute os testes:
-
-```bash
-pytest
-```
-
 ## Saidas geradas
+
+Arquivos principais:
 
 - `data/processed/steam_games_clean.csv`
 - `data/processed/steam_game_genres.csv`
 - `data/processed/steam_games.sqlite`
+
+Tabelas prontas para Power BI:
+
 - `data/processed/powerbi_genre_ratings.csv`
 - `data/processed/powerbi_price_ranges.csv`
 - `data/processed/powerbi_releases_by_year.csv`
 - `data/processed/powerbi_top_developers.csv`
 - `data/processed/powerbi_developer_ratings.csv`
+
+Graficos gerados em Python:
+
 - `reports/figures/genre_ratings.png`
 - `reports/figures/price_ranges.png`
 - `reports/figures/releases_by_year.png`
 
+## Validacao atual
+
+Na execucao com a base FronkonGames, o pipeline gerou:
+
+- 122.610 jogos tratados;
+- 329.318 linhas na tabela jogo-genero;
+- anos de lancamento entre 1997 e 2026;
+- tabelas agregadas para generos, faixas de preco, lancamentos por ano e desenvolvedoras.
+
+## Documentacao
+
+- `docs/download_data.md`: como baixar e posicionar a base.
+- `docs/project_workflow.md`: fluxo completo do projeto.
+- `docs/data_dictionary.md`: dicionario das tabelas tratadas.
+- `docs/powerbi_dashboard_plan.md`: roteiro pratico do dashboard.
+- `docs/data_sources.md`: fontes candidatas e justificativa.
+
 ## Status
 
-Projeto iniciado com estrutura, documentacao, pipeline em Python, modelo SQL, consultas analiticas, testes e geracao de graficos.
+Concluido:
 
-Proxima etapa: escolher a fonte definitiva, baixar a base e validar o pipeline com dados reais.
+- estrutura inicial do projeto;
+- pipeline Python de limpeza;
+- correcao de leitura do CSV da FronkonGames;
+- exportacao de CSVs tratados;
+- banco SQLite;
+- consultas SQL;
+- tabelas agregadas para Power BI;
+- documentacao tecnica inicial.
+
+Pendente:
+
+- construir o dashboard no Power BI;
+- salvar o arquivo `.pbix` em `powerbi/`;
+- documentar os principais insights apos a criacao do dashboard.
