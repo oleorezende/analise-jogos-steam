@@ -33,6 +33,7 @@ POWERBI_EXPORTS = {
             ROUND(AVG(positive_review_percentage), 2) AS avg_positive_review_percentage
         FROM games
         WHERE total_reviews >= 50
+          AND price_usd IS NOT NULL
         GROUP BY price_range
         ORDER BY avg_positive_review_percentage DESC
     """,
@@ -46,6 +47,34 @@ POWERBI_EXPORTS = {
         WHERE release_year IS NOT NULL
         GROUP BY release_year
         ORDER BY release_year
+    """,
+    "powerbi_top_developers.csv": """
+        SELECT
+            developer,
+            COUNT(*) AS total_games,
+            ROUND(AVG(price_usd), 2) AS avg_price_usd,
+            ROUND(AVG(positive_review_percentage), 2) AS avg_positive_review_percentage,
+            SUM(total_reviews) AS total_reviews
+        FROM games
+        WHERE developer IS NOT NULL
+          AND developer <> 'Unknown'
+        GROUP BY developer
+        HAVING COUNT(*) >= 3
+        ORDER BY total_games DESC, avg_positive_review_percentage DESC
+    """,
+    "powerbi_developer_ratings.csv": """
+        SELECT
+            developer,
+            COUNT(*) AS total_games,
+            ROUND(AVG(positive_review_percentage), 2) AS avg_positive_review_percentage,
+            SUM(total_reviews) AS total_reviews
+        FROM games
+        WHERE developer IS NOT NULL
+          AND developer <> 'Unknown'
+          AND total_reviews >= 50
+        GROUP BY developer
+        HAVING COUNT(*) >= 3
+        ORDER BY avg_positive_review_percentage DESC, total_reviews DESC
     """,
 }
 
