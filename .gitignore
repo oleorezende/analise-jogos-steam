@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data outputs
+*.db
+*.sqlite
+*.sqlite3
+
+# Power BI temporary files
+*.pbit.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
