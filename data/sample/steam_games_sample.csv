@@ -1,0 +1,8 @@
+appID,name,release_date,developers,price,positive,negative,genres
+10,Counter-Strike,"Nov 1, 2000","['Valve']",9.99,232000,6200,"['Action']"
+620,Portal 2,"Apr 18, 2011","['Valve']",9.99,360000,4500,"['Action', 'Adventure']"
+105600,Terraria,"May 16, 2011","['Re-Logic']",9.99,980000,21000,"['Action', 'Adventure', 'Indie', 'RPG']"
+367520,Hollow Knight,"Feb 24, 2017","['Team Cherry']",14.99,340000,8000,"['Action', 'Adventure', 'Indie']"
+413150,Stardew Valley,"Feb 26, 2016","['ConcernedApe']",14.99,730000,12000,"['Indie', 'RPG', 'Simulation']"
+582010,Monster Hunter: World,"Aug 9, 2018","['CAPCOM Co., Ltd.']",29.99,280000,45000,"['Action']"
+730,Counter-Strike 2,"Aug 21, 2012","['Valve']",0,8200000,1200000,"['Action', 'Free To Play']"
