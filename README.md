@@ -28,12 +28,16 @@ A ideia e construir um projeto de portfolio completo, com etapas claras de trata
 .
 |-- data/
 |   |-- raw/
+|   |-- sample/
 |   `-- processed/
 |-- docs/
 |-- notebooks/
 |-- powerbi/
+|-- reports/
+|   `-- figures/
 |-- sql/
 |-- src/
+|-- tests/
 |-- README.md
 `-- requirements.txt
 ```
@@ -48,9 +52,17 @@ Para executar o pipeline atual, coloque o arquivo CSV da base escolhida em:
 data/raw/steam_games.csv
 ```
 
+Tambem existe uma amostra pequena em:
+
+```text
+data/sample/steam_games_sample.csv
+```
+
+Essa amostra serve apenas para testar o pipeline antes de baixar a base completa.
+
 Colunas esperadas pelo pipeline:
 
-- `appid` ou `app_id`;
+- `appid`, `appID` ou `app_id`;
 - `name`, `title` ou `game`;
 - `release_date`;
 - `developer` ou `developers`;
@@ -85,6 +97,13 @@ Ou execute cada etapa separadamente:
 python -m src.prepare_data
 python -m src.build_database
 python -m src.export_powerbi_tables
+python -m src.create_visualizations
+```
+
+Execute os testes:
+
+```bash
+pytest
 ```
 
 ## Saidas geradas
@@ -95,9 +114,12 @@ python -m src.export_powerbi_tables
 - `data/processed/powerbi_genre_ratings.csv`
 - `data/processed/powerbi_price_ranges.csv`
 - `data/processed/powerbi_releases_by_year.csv`
+- `reports/figures/genre_ratings.png`
+- `reports/figures/price_ranges.png`
+- `reports/figures/releases_by_year.png`
 
 ## Status
 
-Projeto iniciado com estrutura, documentacao, pipeline inicial em Python, modelo SQL e consultas analiticas base.
+Projeto iniciado com estrutura, documentacao, pipeline em Python, modelo SQL, consultas analiticas, testes e geracao de graficos.
 
 Proxima etapa: escolher a fonte definitiva, baixar a base e validar o pipeline com dados reais.
