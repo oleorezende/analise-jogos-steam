@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard HTML - Preview Steam</title>
+  <style>
+    :root {
+      --steam-bg: #171a21;
+      --steam-panel: #101923;
+      --steam-panel-2: #1b2838;
+      --steam-blue: #66c0f4;
+      --steam-green: #5c7e10;
+      --steam-text: #c7d5e0;
+      --steam-muted: #8f98a0;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 28px;
+      background: #070b10;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 1280px;
+      min-height: 720px;
+      margin: 0 auto;
+      padding: 26px;
+      color: var(--steam-text);
+      overflow: hidden;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #0b141c 0%, var(--steam-bg) 46%, var(--steam-panel-2) 100%);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .42);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--steam-blue);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 5px 0 0;
+      font-size: 34px;
+      line-height: 1.12;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin-top: 7px;
+      font-size: 13px;
+      color: var(--steam-muted);
+    }
+
+    .score {
+      min-width: 168px;
+      text-align: right;
+      background: rgba(102, 192, 244, .10);
+      border: 1px solid rgba(102, 192, 244, .24);
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+
+    .label {
+      font-size: 12px;
+      color: var(--steam-muted);
+    }
+
+    .score-value {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--steam-blue);
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: var(--steam-panel);
+      border: 1px solid rgba(102, 192, 244, .16);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .24);
+    }
+
+    .value {
+      margin-top: 8px;
+      font-size: 27px;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--steam-muted);
+    }
+
+    .hint.good {
+      color: var(--steam-green);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.35fr .9fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .panel {
+      background: var(--steam-panel);
+      border: 1px solid rgba(102, 192, 244, .14);
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .yoy {
+      font-size: 12px;
+      color: var(--steam-blue);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mini {
+      background: var(--steam-panel-2);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .mini-value {
+      margin-top: 3px;
+      font-size: 25px;
+      color: var(--white);
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .momentum {
+      position: relative;
+      height: 150px;
+      margin-top: 18px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(90deg, rgba(92, 126, 16, .95), rgba(102, 192, 244, .78));
+    }
+
+    .momentum-title {
+      position: absolute;
+      left: 22px;
+      top: 20px;
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .momentum-value {
+      position: absolute;
+      left: 22px;
+      bottom: 22px;
+      color: var(--white);
+      font-size: 38px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .ring {
+      position: absolute;
+      right: -40px;
+      top: -70px;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      border: 34px solid rgba(255, 255, 255, .16);
+    }
+
+    .steam-signal {
+      position: absolute;
+      right: 48px;
+      bottom: 20px;
+      color: rgba(255, 255, 255, .86);
+      font-size: 12px;
+    }
+
+    .highlights {
+      display: grid;
+      gap: 12px;
+    }
+
+    .highlight {
+      background: var(--steam-panel-2);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .highlight-value {
+      margin-top: 4px;
+      font-size: 16px;
+      color: var(--white);
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .note {
+      background: var(--steam-panel);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid rgba(102, 192, 244, .12);
+    }
+
+    .note-text {
+      margin-top: 8px;
+      font-size: 15px;
+      color: var(--steam-text);
+      line-height: 1.45;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 14px;
+      }
+
+      .header,
+      .main-grid {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .score {
+        text-align: left;
+      }
+
+      .kpis,
+      .notes {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dashboard">
+    <section class="header">
+      <div>
+        <div class="eyebrow">Steam Sell Out Intelligence</div>
+        <h1>Dashboard Executivo</h1>
+        <div class="subtitle">Receita estimada por preco e volume de reviews, jogos, generos e desenvolvedores.</div>
+      </div>
+
+      <div class="score">
+        <div class="label">Avaliacao positiva</div>
+        <div class="score-value">84,7%</div>
+      </div>
+    </section>
+
+    <section class="kpis">
+      <div class="card">
+        <div class="label">Receita Total</div>
+        <div class="value">R$ 42.580.000</div>
+        <div class="hint good">Valor bruto estimado</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Quantidade Vendida</div>
+        <div class="value">8.736.420</div>
+        <div class="hint">Proxy: total de reviews</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Ticket Medio</div>
+        <div class="value">R$ 48,74</div>
+        <div class="hint">Preco ponderado por reviews</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Crescimento Mensal</div>
+        <div class="value" style="color: #66c0f4;">+12,4%</div>
+        <div class="hint">vs mes anterior</div>
+      </div>
+    </section>
+
+    <section class="main-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Performance do Catalogo</div>
+          <div class="yoy">YoY +18,9%</div>
+        </div>
+
+        <div class="mini-grid">
+          <div class="mini">
+            <div class="label">Jogos</div>
+            <div class="mini-value">12.846</div>
+          </div>
+          <div class="mini">
+            <div class="label">Desenvolvedores</div>
+            <div class="mini-value">3.214</div>
+          </div>
+          <div class="mini">
+            <div class="label">Preco Medio</div>
+            <div class="mini-value">R$ 37,90</div>
+          </div>
+        </div>
+
+        <div class="momentum">
+          <div class="momentum-title">Momentum Comercial</div>
+          <div class="momentum-value">+12,4%</div>
+          <div class="ring"></div>
+          <div class="steam-signal">Steam blue x green signal</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom: 16px;">Destaques</div>
+        <div class="highlights">
+          <div class="highlight">
+            <div class="label">Produto mais forte</div>
+            <div class="highlight-value">Counter-Strike 2</div>
+          </div>
+          <div class="highlight">
+            <div class="label">Categoria destaque</div>
+            <div class="highlight-value">Action</div>
+          </div>
+          <div class="highlight">
+            <div class="label">Melhor desenvolvedor</div>
+            <div class="highlight-value">Valve</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="notes">
+      <div class="note">
+        <div class="label">Leitura executiva</div>
+        <div class="note-text">Use filtros de ano, mes, genero e desenvolvedor para comparar portfolio, potencial de receita e recepcao dos jogos.</div>
+      </div>
+      <div class="note">
+        <div class="label">Base de volume</div>
+        <div class="note-text">Sem vendas transacionais, o volume usa reviews como proxy de demanda/engajamento.</div>
+      </div>
+      <div class="note">
+        <div class="label">Modelo</div>
+        <div class="note-text">Fato principal: steam_games_clean. Calendario: dCalendario. Dimensao de genero: steam_game_genres.</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
